@@ -73,6 +73,21 @@ public interface RxBleConnection {
     Observable<Observable<byte[]>> setupNotification(@NonNull UUID characteristicUuid);
 
     /**
+     * Setup characteristic indication in order to receive callbacks when given characteristic has been changed. Returned observable will
+     * emit Observable<byte[]> once the indication setup has been completed. It is possible to setup more observables for the same
+     * characteristic and the lifecycle of the indication will be shared among them.
+     * <p>
+     * Indication is automatically unregistered once this observable is unsubscribed.
+     *
+     * @param characteristicUuid Characteristic UUID for indication setup.
+     * @return Observable emitting another observable when the indication setup is complete.
+     * @throws BleCharacteristicNotFoundException              if characteristic with given UUID hasn't been found.
+     * @throws BleCannotSetCharacteristicNotificationException if setup process indication setup process fail. This may be an internal
+     *                                                         reason or lack of permissions.
+     */
+    Observable<Observable<byte[]>> setupIndication(@NonNull UUID characteristicUuid);
+
+    /**
      * Convenience method for characteristic retrieval. First step is service discovery which is followed by service/characteristic
      * traversal. This is an alias to:
      * <ol>
